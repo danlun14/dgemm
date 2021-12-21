@@ -46,7 +46,7 @@ void dgemm_transpose(const float *a, const float *b, float *c, int n)
         }
     }
 }
-
+/*
 void dgemm_avx(const float *A, const float *B, float *C, int n)
 {
     for (int i = 0; i < n; ++i)
@@ -65,7 +65,7 @@ void dgemm_avx(const float *A, const float *B, float *C, int n)
         }
     }
 }
-
+*/
 void dgemm_block(float *a, float *b, float *c, int n, int BS)
 {
     int i, j, k;
@@ -146,9 +146,9 @@ int is_avx_supported()
 
 int main(int argc, char **argv)
 {
-    int N = 1024;
+//    int N = 1024;
     //int N = 2048;
-    //int N = 512;
+    int N = 512;
     int BS;
     float *A = (float *)_mm_malloc(sizeof(float) * N * N, 16);
     float *B = (float *)_mm_malloc(sizeof(float) * N * N, 16);
@@ -158,21 +158,21 @@ int main(int argc, char **argv)
     printf("initializated\n");
     int i;
     double t, t_start;
-    for (BS = 2; BS < 512; BS *= 2)
-    {
+//    for (BS = 2; BS < 512; BS *= 2)
+//    {
         t = hpctimer_getwtime();
         for (i = 0; i < NREPS; i++)
         {
-            //dgemm_def(A, B, C, N);
-            //dgemm_transpose(A, B, C, N);
+//            dgemm_def(A, B, C, N);
+            dgemm_transpose(A, B, C, N);
             //dgemm_avx(A, B, C, N);
-            dgemm_block(A, B, C, N, BS);
-            printf("%d -> success!\n", i);
+//            dgemm_block(A, B, C, N, BS);
+//            printf("%d -> success!\n", i);
         }
         t = hpctimer_getwtime() - t;
         t = t / NREPS;
-        printf("Elapsed time: %d %.6f sec.\n\n", BS, t);
-    }
+//        printf("Elapsed time: %d %.6f sec.\n\n", BS, t);
+    //}
     free(A);
     free(B);
     free(C);
